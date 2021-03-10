@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'api_calls.dart';
+
 class RoomListTile extends StatefulWidget {
   RoomListTile({@required this.roomIndex});
 
@@ -18,17 +20,22 @@ class _RoomListTileState extends State<RoomListTile> {
     });
   }
 
+  _roomDirty() {
+    setState(() {
+      isClean = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(width: 1.0, color: Colors.black54),
-          left: BorderSide(width: 4.0, color: Colors.grey),
-          right: BorderSide(width: 4.0, color: Colors.grey),
-          bottom: BorderSide(width: 1.0, color: Colors.black54),
-        )
-      ),
+          border: Border(
+        top: BorderSide(width: 1.0, color: Colors.black54),
+        left: BorderSide(width: 4.0, color: Colors.grey),
+        right: BorderSide(width: 4.0, color: Colors.grey),
+        bottom: BorderSide(width: 1.0, color: Colors.black54),
+      )),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -38,10 +45,18 @@ class _RoomListTileState extends State<RoomListTile> {
             color: isClean ? Colors.lightGreen : Colors.deepOrangeAccent,
             child: Icon(!isClean ? Icons.cleaning_services : Icons.check),
           ),
-          Text('Soba ${widget.roomIndex}'),
+          Text('Soba ${widget.roomIndex+1}'),
           ElevatedButton(
             onPressed: _roomCleaned,
             child: Text('Očišćeno'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Colors.red, // background
+              onPrimary: Colors.white, // foreground
+            ),
+            onPressed: _roomDirty,
+            child: Text('Prljavo'),
           )
         ],
       ),
