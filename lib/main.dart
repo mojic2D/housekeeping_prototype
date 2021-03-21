@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:housekeeping_prototype/room_list.dart';
+import 'package:housekeeping_prototype/ui/room_list.dart';
 
 void main() {
   runApp(MyApp());

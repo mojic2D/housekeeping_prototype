@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'api_calls.dart';
+import '../api_calls.dart';
 
 class RoomListTile extends StatefulWidget {
   RoomListTile({@required this.roomIndex});
@@ -30,12 +30,13 @@ class _RoomListTileState extends State<RoomListTile> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          border: Border(
-        top: BorderSide(width: 1.0, color: Colors.black54),
-        left: BorderSide(width: 4.0, color: Colors.grey),
-        right: BorderSide(width: 4.0, color: Colors.grey),
-        bottom: BorderSide(width: 1.0, color: Colors.black54),
-      )),
+        border: Border(
+          top: BorderSide(width: widget.roomIndex==0?4.0:1.0, color: Colors.black54),
+          left: BorderSide(width: 4.0, color: Colors.grey),
+          right: BorderSide(width: 4.0, color: Colors.grey),
+          bottom: BorderSide(width: 1.0, color: Colors.black54),
+        ),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -45,7 +46,7 @@ class _RoomListTileState extends State<RoomListTile> {
             color: isClean ? Colors.lightGreen : Colors.deepOrangeAccent,
             child: Icon(!isClean ? Icons.cleaning_services : Icons.check),
           ),
-          Text('Soba ${widget.roomIndex+1}'),
+          Text('Soba ${widget.roomIndex + 1}'),
           ElevatedButton(
             onPressed: _roomCleaned,
             child: Text('Očišćeno'),
