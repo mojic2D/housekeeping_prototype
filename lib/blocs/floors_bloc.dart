@@ -22,13 +22,13 @@ class FloorsBloc {
   Future<void> refreshData() async {
     List<Floor> floorNumList = <Floor>[];
 
-    //Response response = await _readRegRoom();
-    //List<dynamic> roomList = jsonDecode(response.body);
-    List<dynamic> roomList = jsonDecode(json);
+    Response response = await _readRegRoom();
+    List<dynamic> roomList = jsonDecode(response.body);
+    //List<dynamic> roomList = jsonDecode(json);
     for (var i = 0; i < roomList.length; i++) {
       String floorNumber = roomList[i]['sprat'].toString();
-      String roomNumber = roomList[i]['soba'].toString();
-      bool isClean = roomList[i]['cista'].toString() == 'D' ? true : false;
+      String roomNumber = roomList[i]['sifra'].toString();
+      bool isClean = roomList[i]['status'].toString() == 'D' ? true : false;
 
       print('floorNumber:'+floorNumber);
       print('roomNumber:'+roomNumber);
@@ -50,13 +50,14 @@ class FloorsBloc {
           .roomList
           .add(Room(number: roomNumber, isClean: isClean));
     }
-//    for(int i =0;i<roomList.length;i++){
-//      //print(floorNumList[i].number);
-//      for(Room r in floorNumList[i].roomList) {
-//        print(r.number);
-//      }
-//    }
     model.floorList = floorNumList;
+    model.selectedFloor=model.floorList[0];
+    _modelController.add(model);
+  }
+
+  void changeFloor(int floorIndex){
+    model.selectedFloor=model.floorList[floorIndex];
+    _modelController.add(model);
   }
 
   Future<Response> _readRegRoom() async {

@@ -14,4 +14,12 @@ class Floor{
   String toString() {
     return number;
   }
+
+  Room roomByNumber(String roomNumber){
+    for(Room r in roomList){
+      if(r.number==roomNumber){
+        return r;
+      }
+    }
+  }
 }

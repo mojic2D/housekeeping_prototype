@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:housekeeping_prototype/models/floors_model.dart';
+import 'package:housekeeping_prototype/pojo/room.dart';
 
 import '../api_calls.dart';
 
 class RoomListTile extends StatefulWidget {
-  RoomListTile({@required this.roomIndex});
+  RoomListTile({@required this.roomIndex,@required this.model});
 
+  final FloorsModel model;
   final int roomIndex;
 
   @override
@@ -14,20 +17,22 @@ class RoomListTile extends StatefulWidget {
 class _RoomListTileState extends State<RoomListTile> {
   bool isClean = false;
 
+
   _roomCleaned() {
     setState(() {
-      isClean = true;
+      widget.model.selectedFloor.roomByNumber(widget.roomIndex.toString()).isClean = true;
     });
   }
 
   _roomDirty() {
     setState(() {
-      isClean = false;
+      widget.model.selectedFloor.roomByNumber(widget.roomIndex.toString()).isClean = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    Room room=widget.model.selectedFloor.roomByNumber(widget.roomIndex.toString());
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -43,8 +48,8 @@ class _RoomListTileState extends State<RoomListTile> {
           Container(
             width: 100,
             height: 100,
-            color: isClean ? Colors.lightGreen : Colors.deepOrangeAccent,
-            child: Icon(!isClean ? Icons.cleaning_services : Icons.check),
+            color: room.isClean? Colors.lightGreen : Colors.deepOrangeAccent,
+            child: Icon(!room.isClean ? Icons.cleaning_services : Icons.check),
           ),
           Text('Soba ${widget.roomIndex + 1}'),
           ElevatedButton(
