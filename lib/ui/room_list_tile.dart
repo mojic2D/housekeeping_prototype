@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:housekeeping_prototype/models/floors_model.dart';
 import 'package:housekeeping_prototype/pojo/room.dart';
+import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 
 import '../api_calls.dart';
 
@@ -17,6 +21,22 @@ class RoomListTile extends StatefulWidget {
 class _RoomListTileState extends State<RoomListTile> {
   bool isClean = false;
 
+  Future<Response> _updateRoomStatus(int roomNumber, String isClean) async{
+    var url = 'http://25.110.41.176/housekeeping/soba_status.php?json={"soba":$roomNumber,"status":"$isClean"}';
+    return await http.get(url);
+  }
+
+  _updateRoomStatusUI(String status) async{
+    Response response= await _updateRoomStatus(widget.roomIndex, status);
+    print('response.header=${response.headers}');
+    print('response.body=${response.body}');
+    Map<String,dynamic> httpResponse=jsonDecode(response.body);
+    if(httpResponse['status']=="200"){
+      setState(() {
+        widget.model.selectedFloor.roomByNumber(widget.roomIndex.toString()).isClean = status=="D"?true:false;
+      });
+    }
+  }
 
   _roomCleaned() {
     setState(() {
@@ -53,7 +73,7 @@ class _RoomListTileState extends State<RoomListTile> {
           ),
           Text('Soba ${widget.roomIndex + 1}'),
           ElevatedButton(
-            onPressed: _roomCleaned,
+            onPressed: ()=>_updateRoomStatusUI('D'),
             child: Text('Očišćeno'),
           ),
           ElevatedButton(
@@ -61,7 +81,7 @@ class _RoomListTileState extends State<RoomListTile> {
               primary: Colors.red, // background
               onPrimary: Colors.white, // foreground
             ),
-            onPressed: _roomDirty,
+            onPressed: ()=>_updateRoomStatusUI('N'),
             child: Text('Prljavo'),
           )
         ],

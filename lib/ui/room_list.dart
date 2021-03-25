@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:housekeeping_prototype/api_calls.dart';
 import 'package:housekeeping_prototype/blocs/floors_bloc.dart';
 import 'package:housekeeping_prototype/models/floors_model.dart';
+import 'package:housekeeping_prototype/pojo/floor.dart';
+import 'package:housekeeping_prototype/pojo/room.dart';
 import 'package:housekeeping_prototype/ui/floor_list_tile.dart';
 import 'package:housekeeping_prototype/ui/room_list_tile.dart';
 
@@ -25,7 +27,7 @@ class RoomList extends StatelessWidget {
       ),
       body: StreamBuilder<FloorsModel>(
           stream: floorsBloc.modelStream,
-          initialData: floorsBloc.model,
+          initialData: FloorsModel(selectedFloor:Floor(number:"1",roomList:<Room>[]),floorList:<Floor>[]),
           builder: (context, snapshot) {
             final FloorsModel model = snapshot.data;
             return Column(

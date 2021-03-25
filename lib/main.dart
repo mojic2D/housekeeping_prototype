@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:housekeeping_prototype/ui/login_page.dart';
+import 'package:housekeeping_prototype/ui/new_login_page.dart';
 import 'package:housekeeping_prototype/ui/room_list.dart';
 
 void main() {
@@ -13,7 +15,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
       ),
-      home: RoomList(),
+      //home: RoomList(),
+      home:NewLoginPage(),
     );
   }
 }
+
