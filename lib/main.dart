@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:housekeeping_prototype/ui/login_page.dart';
 import 'package:housekeeping_prototype/ui/new_login_page.dart';
 import 'package:housekeeping_prototype/ui/room_list.dart';
 

@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 import '../api_calls.dart';
 
 class RoomListTile extends StatefulWidget {
-  RoomListTile({@required this.roomIndex,@required this.model});
+  RoomListTile({@required this.roomIndex, @required this.model});
 
   final FloorsModel model;
   final int roomIndex;
@@ -21,69 +21,119 @@ class RoomListTile extends StatefulWidget {
 class _RoomListTileState extends State<RoomListTile> {
   bool isClean = false;
 
-  Future<Response> _updateRoomStatus(int roomNumber, String isClean) async{
-    var url = 'http://25.110.41.176/housekeeping/soba_status.php?json={"soba":$roomNumber,"status":"$isClean"}';
+  Future<Response> _updateRoomStatus(int roomNumber, String isClean) async {
+    var url =
+        'http://25.110.41.176/housekeeping/soba_status.php?json={"soba":$roomNumber,"status":"$isClean"}';
     return await http.get(url);
   }
 
-  _updateRoomStatusUI(String status) async{
-    Response response= await _updateRoomStatus(widget.roomIndex, status);
+  _updateRoomStatusUI(String status) async {
+    Response response = await _updateRoomStatus(widget.roomIndex, status);
     print('response.header=${response.headers}');
     print('response.body=${response.body}');
-    Map<String,dynamic> httpResponse=jsonDecode(response.body);
-    if(httpResponse['status']=="200"){
+    Map<String, dynamic> httpResponse = jsonDecode(response.body);
+    if (httpResponse['status'] == "200") {
       setState(() {
-        widget.model.selectedFloor.roomByNumber(widget.roomIndex.toString()).isClean = status=="D"?true:false;
+        widget.model.selectedFloor
+            .roomByNumber(widget.roomIndex.toString())
+            .isClean = status == "D" ? true : false;
       });
     }
   }
 
   _roomCleaned() {
     setState(() {
-      widget.model.selectedFloor.roomByNumber(widget.roomIndex.toString()).isClean = true;
+      widget.model.selectedFloor
+          .roomByNumber(widget.roomIndex.toString())
+          .isClean = true;
     });
   }
 
   _roomDirty() {
     setState(() {
-      widget.model.selectedFloor.roomByNumber(widget.roomIndex.toString()).isClean = false;
+      widget.model.selectedFloor
+          .roomByNumber(widget.roomIndex.toString())
+          .isClean = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    Room room=widget.model.selectedFloor.roomByNumber(widget.roomIndex.toString());
+    Room room =
+        widget.model.selectedFloor.roomByNumber(widget.roomIndex.toString());
     return Container(
+      height: 85,
       decoration: BoxDecoration(
         border: Border(
-          top: BorderSide(width: widget.roomIndex==0?4.0:1.0, color: Colors.black54),
-          left: BorderSide(width: 4.0, color: Colors.grey),
-          right: BorderSide(width: 4.0, color: Colors.grey),
-          bottom: BorderSide(width: 1.0, color: Colors.black54),
+          //top: widget.roomIndex==0 ? BorderSide(width: 1.0, color: Colors.grey):BorderSide(width:0.0),
+          left: BorderSide(width: 1.0, color: Colors.grey),
+          right: BorderSide(width: 1.0, color: Colors.grey),
+          bottom: BorderSide(width: 1.0, color: Colors.grey),
         ),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            width: 100,
-            height: 100,
-            color: room.isClean? Colors.lightGreen : Colors.deepOrangeAccent,
-            child: Icon(!room.isClean ? Icons.cleaning_services : Icons.check),
-          ),
-          Text('Soba ${widget.roomIndex + 1}'),
-          ElevatedButton(
-            onPressed: ()=>_updateRoomStatusUI('D'),
-            child: Text('Očišćeno'),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              primary: Colors.red, // background
-              onPrimary: Colors.white, // foreground
+            decoration: BoxDecoration(
+
+              border: Border(
+                //left: BorderSide(width: 1.0, color: Colors.grey),
+                right: BorderSide(width: 1.0, color: Colors.grey),
+                //bottom: BorderSide(width: 1.0, color: Colors.grey),
+              ),
             ),
-            onPressed: ()=>_updateRoomStatusUI('N'),
-            child: Text('Prljavo'),
-          )
+            width: 85,
+            height: 85,
+            child: Center(
+              child: Container(
+                width: 70,
+                height:70,
+                decoration: BoxDecoration(
+                  color: room.isClean ? Colors.lightGreen : Colors.deepOrangeAccent,
+                  border: Border.all(color:Colors.black38,width: 1.8),
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                child: Icon(
+                  !room.isClean ? Icons.cleaning_services : Icons.check,
+                  size: 40.0,
+                ),
+              ),
+            ),
+          ),
+          Container(
+              child: Text(
+            'Soba ${widget.roomIndex + 1}',
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 16.0,
+            ),
+          )),
+          Padding(
+            padding: EdgeInsets.only(right: 20.0),
+            child: Container(
+              height: 45,
+              child: ElevatedButton(
+                onPressed: () => _updateRoomStatusUI('D'),
+                child: Text(
+                  'Očišćeno',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16.0,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // ElevatedButton(
+          //   style: ElevatedButton.styleFrom(
+          //     primary: Colors.red, // background
+          //     onPrimary: Colors.white, // foreground
+          //   ),
+          //   onPressed: ()=>_updateRoomStatusUI('N'),
+          //   child: Text('Prljavo'),
+          // )
         ],
       ),
     );
