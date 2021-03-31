@@ -63,10 +63,6 @@ class FloorsBloc {
     _modelController.add(model);
   }
 
-
-
-
-
   Future<Response> _readRegRoom() async {
     var url = 'http://25.110.41.176/housekeeping/soba.php';
     return await http.get(url);

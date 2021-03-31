@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:housekeeping_prototype/ui/room_list.dart';
 import 'package:http/http.dart';
@@ -21,19 +20,49 @@ class _NewLoginPageState extends State<NewLoginPage> {
     super.dispose();
   }
 
+  void _showToast(int statusCode) {
+    if(statusCode==404){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: const Text('Greska!',textAlign: TextAlign.center,),
+        duration: const Duration(seconds: 5),
+      ));
+      return;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: const Text('Neispravni podaci!',textAlign: TextAlign.center,),
+      duration: const Duration(seconds: 5),
+    ));
+
+  }
+
   _submit() async {
     Response response =
         await http.get("http://25.110.41.176/housekeeping/korisnik.php");
+    if(response.statusCode==404){
+      _showToast(404);
+      return;
+    }
     List<dynamic> userList = jsonDecode(response.body);
+
+    bool userExists=false;
+
     for (int i = 0; i < userList.length; i++) {
       if (usernameController.text == userList[i]['user_name'].toString() &&
           passwordController.text == userList[i]['user_pass'].toString()) {
-        Navigator.of(context).push(MaterialPageRoute<void>(
-          builder: (context) => RoomList(),
-        ));
+        userExists=true;
         break;
       }
     }
+
+    if(userExists){
+      Navigator.of(context).push(MaterialPageRoute<void>(
+        builder: (context) => RoomList(),
+      ));
+    }else{
+      _showToast(0);
+    }
+
   }
 
   @override

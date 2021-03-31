@@ -19,7 +19,7 @@ class RoomListTile extends StatefulWidget {
 }
 
 class _RoomListTileState extends State<RoomListTile> {
-  bool isClean = false;
+  //bool isClean = false;
 
   Future<Response> _updateRoomStatus(int roomNumber, String isClean) async {
     var url =
@@ -27,7 +27,38 @@ class _RoomListTileState extends State<RoomListTile> {
     return await http.get(url);
   }
 
+  showAlertDialog(BuildContext context, int roomIndex) {
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Potrebna potvrda!"),
+      content: Text("Sigurno promjeniti stanje sobe $roomIndex?"),
+      actions: [
+        TextButton(
+          child: Text("Prekini"),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        TextButton(
+          child: Text("Potvrdi"),
+          onPressed: () {
+            Navigator.of(context).pop();
+            _updateRoomStatusUI('D');
+          },
+        ),
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   _updateRoomStatusUI(String status) async {
+    print('_updateRoomStatusUI starts!');
     Response response = await _updateRoomStatus(widget.roomIndex, status);
     print('response.header=${response.headers}');
     print('response.body=${response.body}');
@@ -38,23 +69,23 @@ class _RoomListTileState extends State<RoomListTile> {
             .roomByNumber(widget.roomIndex.toString())
             .isClean = status == "D" ? true : false;
       });
+      if (status != 'N') {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text(
+            'Undo action?',
+            textAlign: TextAlign.center,
+          ),
+          duration: const Duration(seconds: 5),
+          action: SnackBarAction(
+            label: 'UNDO',
+            textColor: Colors.orange,
+            onPressed: () {
+              _updateRoomStatusUI('N');
+            },
+          ),
+        ));
+      }
     }
-  }
-
-  _roomCleaned() {
-    setState(() {
-      widget.model.selectedFloor
-          .roomByNumber(widget.roomIndex.toString())
-          .isClean = true;
-    });
-  }
-
-  _roomDirty() {
-    setState(() {
-      widget.model.selectedFloor
-          .roomByNumber(widget.roomIndex.toString())
-          .isClean = false;
-    });
   }
 
   @override
@@ -76,7 +107,6 @@ class _RoomListTileState extends State<RoomListTile> {
         children: [
           Container(
             decoration: BoxDecoration(
-
               border: Border(
                 //left: BorderSide(width: 1.0, color: Colors.grey),
                 right: BorderSide(width: 1.0, color: Colors.grey),
@@ -88,10 +118,12 @@ class _RoomListTileState extends State<RoomListTile> {
             child: Center(
               child: Container(
                 width: 70,
-                height:70,
+                height: 70,
                 decoration: BoxDecoration(
-                  color: room.isClean ? Colors.lightGreen : Colors.deepOrangeAccent,
-                  border: Border.all(color:Colors.black38,width: 1.8),
+                  color: room.isClean
+                      ? Colors.lightGreen
+                      : Colors.deepOrangeAccent,
+                  border: Border.all(color: Colors.black38, width: 1.8),
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 child: Icon(
@@ -103,7 +135,7 @@ class _RoomListTileState extends State<RoomListTile> {
           ),
           Container(
               child: Text(
-            'Soba ${widget.roomIndex + 1}',
+            'Soba ${widget.roomIndex}',
             style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 16.0,
@@ -114,7 +146,9 @@ class _RoomListTileState extends State<RoomListTile> {
             child: Container(
               height: 45,
               child: ElevatedButton(
-                onPressed: () => _updateRoomStatusUI('D'),
+                onPressed: room.isClean
+                    ? null
+                    : () => showAlertDialog(context, widget.roomIndex),
                 child: Text(
                   'Očišćeno',
                   style: TextStyle(
