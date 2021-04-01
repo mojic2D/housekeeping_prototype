@@ -146,6 +146,7 @@ class _RoomListTileState extends State<RoomListTile> {
             child: Container(
               height: 45,
               child: ElevatedButton(
+
                 onPressed: room.isClean
                     ? null
                     : () => showAlertDialog(context, widget.roomIndex),
@@ -154,8 +155,16 @@ class _RoomListTileState extends State<RoomListTile> {
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 16.0,
-                    color: Colors.white,
+                    //color: Colors.white,
                   ),
+                ),
+                style: ButtonStyle(
+                  //enableFeedback: false,
+                  //animationDuration: Duration.zero,
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(room.isClean ? Colors.grey[300]:Colors.blue),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(room.isClean ? Colors.grey: Colors.white),
                 ),
               ),
             ),
