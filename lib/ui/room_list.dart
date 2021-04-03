@@ -56,6 +56,7 @@ class RoomList extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       itemCount: model.floorList.length,
                       itemBuilder: (context, index) {
+                        bool hasFloorsForCleaning=model.hasRoomsForCleaning(model.floorList[index].toString());
                         return Padding(
                           padding: const EdgeInsets.all(4.0),
                           child: Container(
@@ -86,7 +87,12 @@ class RoomList extends StatelessWidget {
                                             ? Colors.white
                                             : Colors.blue),
                               ),
-                              child: Text(model.floorList[index].toString()),
+                              child: Row(mainAxisAlignment:MainAxisAlignment.spaceBetween,children: [
+                                SizedBox(width: hasFloorsForCleaning ? 16:0,),
+                                Text(model.floorList[index].toString()),
+                                Icon(Icons.arrow_drop_down_circle,color:Colors.red,
+                                size:hasFloorsForCleaning ? 16:0,),
+                              ]),
                               onPressed: () => floorsBloc.changeFloor(index),
                             ),
                           ),

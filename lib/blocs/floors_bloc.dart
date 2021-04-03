@@ -33,8 +33,9 @@ class FloorsBloc {
       String roomNumber = roomList[i]['sifra'].toString();
       bool isClean = roomList[i]['status'].toString() == 'D' ? true : false;
 
-      print('floorNumber:'+floorNumber);
-      print('roomNumber:'+roomNumber);
+      // print('floorNumber:'+floorNumber);
+      // print('roomNumber:'+roomNumber);
+      print('refreshed');
 
       bool contains = false;
       Floor tempFloor;
@@ -64,7 +65,8 @@ class FloorsBloc {
   }
 
   Future<Response> _readRegRoom() async {
-    var url = 'http://25.110.41.176/housekeeping/soba.php';
+    //var url = 'http://25.110.41.176/housekeeping/soba.php';//srecko
+    var url = 'http://25.107.64.34/housekeeping/soba.php';//kuca
     return await http.get(url);
   }
 

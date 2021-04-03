@@ -23,7 +23,9 @@ class _RoomListTileState extends State<RoomListTile> {
 
   Future<Response> _updateRoomStatus(int roomNumber, String isClean) async {
     var url =
-        'http://25.110.41.176/housekeeping/soba_status.php?json={"soba":$roomNumber,"status":"$isClean"}';
+        //'http://25.110.41.176/housekeeping/soba_status.php?json={"soba":$roomNumber,"status":"$isClean"}';//srecko
+    'http://25.107.64.34/housekeeping/soba_status.php?json={"soba":$roomNumber,"status":"$isClean"}';//kuca
+
     return await http.get(url);
   }
 
