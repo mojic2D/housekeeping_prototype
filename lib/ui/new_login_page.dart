@@ -38,8 +38,8 @@ class _NewLoginPageState extends State<NewLoginPage> {
 
   _submit() async {
     Response response =
-          await http.get("http://25.107.64.34/housekeeping/korisnik.php");//kuca
-        //await http.get("http://25.110.41.176/housekeeping/korisnik.php");//srecko
+         // await http.get("http://25.107.64.34/housekeeping/korisnik.php");//kuca
+        await http.get("http://25.110.41.176/housekeeping/korisnik.php");//srecko
 
     if(response.statusCode==404){
       _showToast(404);

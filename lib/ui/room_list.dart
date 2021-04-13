@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:housekeeping_prototype/api_calls.dart';
 import 'package:housekeeping_prototype/blocs/floors_bloc.dart';
@@ -8,14 +10,40 @@ import 'package:housekeeping_prototype/ui/floor_list_tile.dart';
 import 'package:housekeeping_prototype/ui/notification_list.dart';
 import 'package:housekeeping_prototype/ui/room_list_tile.dart';
 
-class RoomList extends StatelessWidget {
-  ApiCalls calls = new ApiCalls();
+class RoomList extends StatefulWidget {
+  //ApiCalls calls = new ApiCalls();
 
-  final FloorsBloc floorsBloc = new FloorsBloc();
+  FloorsBloc floorsBloc = new FloorsBloc();
+
+
+
+  @override
+  _StateRoomList createState() => _StateRoomList();
+
+
+}
+
+class _StateRoomList extends State<RoomList>{
+
+  bool firstTime;
+  Timer timer;
+
+  @override
+  void initState() {
+    firstTime=true;
+    timer = Timer.periodic(Duration(seconds: 2), (Timer t) => widget.floorsBloc.refreshData());
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    widget.floorsBloc.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    floorsBloc.refreshData();
+
 
     return Scaffold(
         appBar: AppBar(
@@ -27,24 +55,44 @@ class RoomList extends StatelessWidget {
                   builder: (context) => NotificationList(),
                 ));
               },
-              child: Icon(floorsBloc.showingNotifications.value
+              child: Icon(widget.floorsBloc.showingNotifications.value
                   ? Icons.menu
                   : Icons.notifications),
             ),
             ElevatedButton(
-              onPressed: () => floorsBloc.refreshData(),
+              onPressed: () => widget.floorsBloc..refreshData(),
               child: Icon(Icons.refresh_sharp),
             )
           ],
         ),
         body: StreamBuilder<FloorsModel>(
-          stream: floorsBloc.modelStream,
-          initialData: FloorsModel(
-              selectedFloor: Floor(number: "1", roomList: <Room>[]),
-              floorList: <Floor>[]),
+          stream: widget.floorsBloc.modelStream,
+          // initialData: FloorsModel(
+          //     selectedFloor: Floor(number: "1", roomList: <Room>[]),
+          //     floorList: <Floor>[]),
           builder: (context, snapshot) {
             final FloorsModel model =
-                snapshot.data == null ? floorsBloc.model : snapshot.data;
+                snapshot.data == null ? widget.floorsBloc.model : snapshot.data;
+
+            if(snapshot.data==null){
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                SizedBox(
+                  child: CircularProgressIndicator(),
+                  width: 60,
+                  height: 60,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 16),
+                  child: Text('Awaiting result...'),
+                )
+              ],),
+            );}
+
+
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -93,7 +141,7 @@ class RoomList extends StatelessWidget {
                                 Icon(Icons.arrow_drop_down_circle,color:Colors.red,
                                 size:hasFloorsForCleaning ? 16:0,),
                               ]),
-                              onPressed: () => floorsBloc.changeFloor(index),
+                              onPressed: () => widget.floorsBloc..changeFloor(index),
                             ),
                           ),
                         );

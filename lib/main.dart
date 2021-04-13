@@ -14,8 +14,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
       ),
-      home: RoomList(),
-      //home:NewLoginPage(),
+      //home: RoomList(),
+      home:NewLoginPage(),
     );
   }
 }

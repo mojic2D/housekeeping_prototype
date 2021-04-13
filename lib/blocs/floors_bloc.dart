@@ -23,6 +23,7 @@ class FloorsBloc {
   }
 
   Future<void> refreshData() async {
+    print('refreshed');
     List<Floor> floorNumList = <Floor>[];
 
     Response response = await _readRegRoom();
@@ -35,7 +36,7 @@ class FloorsBloc {
 
       // print('floorNumber:'+floorNumber);
       // print('roomNumber:'+roomNumber);
-      print('refreshed');
+
 
       bool contains = false;
       Floor tempFloor;
@@ -55,7 +56,9 @@ class FloorsBloc {
           .add(Room(number: roomNumber, isClean: isClean));
     }
     model.floorList = floorNumList;
-    model.selectedFloor=model.floorList[0];
+
+      model.selectedFloor=model.floorList[0];
+
     _modelController.add(model);
   }
 
@@ -65,8 +68,8 @@ class FloorsBloc {
   }
 
   Future<Response> _readRegRoom() async {
-    //var url = 'http://25.110.41.176/housekeeping/soba.php';//srecko
-    var url = 'http://25.107.64.34/housekeeping/soba.php';//kuca
+    var url = 'http://25.110.41.176/housekeeping/soba.php';//srecko
+    //var url = 'http://25.107.64.34/housekeeping/soba.php';//kuca
     return await http.get(url);
   }
 
