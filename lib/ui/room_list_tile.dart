@@ -6,8 +6,6 @@ import 'package:housekeeping_prototype/pojo/room.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 
-import '../api_calls.dart';
-
 class RoomListTile extends StatefulWidget {
   RoomListTile({@required this.roomIndex, @required this.model});
 
@@ -23,10 +21,10 @@ class _RoomListTileState extends State<RoomListTile> {
 
   Future<Response> _updateRoomStatus(int roomNumber, String isClean) async {
     var url =
-        'http://25.110.41.176/housekeeping/soba_status.php?json={"soba":$roomNumber,"status":"$isClean"}';//srecko
+        'http://25.110.41.176/housekeeping/soba_statusApp.php?json={"soba":$roomNumber,"status":"$isClean"}';//srecko
     //'http://25.107.64.34/housekeeping/soba_status.php?json={"soba":$roomNumber,"status":"$isClean"}';//kuca
 
-    return await http.get(url);
+    return await http.post(Uri.parse(url));
   }
 
   showAlertDialog(BuildContext context, int roomIndex) {

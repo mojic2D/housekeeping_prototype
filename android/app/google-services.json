@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "346005408425",
+    "project_id": "housekeeping-7c1e7",
+    "storage_bucket": "housekeeping-7c1e7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:346005408425:android:2dc7910304acbd259f37b8",
+        "android_client_info": {
+          "package_name": "com.example.housekeeping_prototype"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "346005408425-eqrt7l2blsc8cl3uuhve3ptrea3tgh93.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.housekeeping_prototype",
+            "certificate_hash": "c6651b0d454e4f310984694f8d5b2cf13a1af477"
+          }
+        },
+        {
+          "client_id": "346005408425-fclenhdlfm6qis57mltpngr24mur7maa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBlAgEteY6ykNGDx_YHRABenKdnwp3EI8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "346005408425-fclenhdlfm6qis57mltpngr24mur7maa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

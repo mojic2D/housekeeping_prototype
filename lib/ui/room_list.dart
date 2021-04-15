@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:housekeeping_prototype/api_calls.dart';
 import 'package:housekeeping_prototype/blocs/floors_bloc.dart';
 import 'package:housekeeping_prototype/models/floors_model.dart';
 import 'package:housekeeping_prototype/pojo/floor.dart';
@@ -31,6 +30,7 @@ class _StateRoomList extends State<RoomList>{
   @override
   void initState() {
     firstTime=true;
+    //widget.floorsBloc.model.selectedFloor=
     timer = Timer.periodic(Duration(seconds: 2), (Timer t) => widget.floorsBloc.refreshData());
     super.initState();
   }
@@ -141,7 +141,7 @@ class _StateRoomList extends State<RoomList>{
                                 Icon(Icons.arrow_drop_down_circle,color:Colors.red,
                                 size:hasFloorsForCleaning ? 16:0,),
                               ]),
-                              onPressed: () => widget.floorsBloc..changeFloor(index),
+                              onPressed: () => widget.floorsBloc.changeFloor(index),
                             ),
                           ),
                         );

@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:housekeeping_prototype/authentication_service.dart';
 import 'package:housekeeping_prototype/ui/room_list.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class NewLoginPage extends StatefulWidget {
   @override
@@ -21,77 +23,88 @@ class _NewLoginPageState extends State<NewLoginPage> {
   }
 
   void _showToast(int statusCode) {
-    if(statusCode==404){
+    if (statusCode == 404) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text('Greska!',textAlign: TextAlign.center,),
+        content: const Text(
+          'Greska!',
+          textAlign: TextAlign.center,
+        ),
         duration: const Duration(seconds: 5),
       ));
       return;
     }
 
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: const Text('Neispravni podaci!',textAlign: TextAlign.center,),
+      content: const Text(
+        'Neispravni podaci!',
+        textAlign: TextAlign.center,
+      ),
       duration: const Duration(seconds: 5),
     ));
-
   }
 
   _submit() async {
     Response response =
-         // await http.get("http://25.107.64.34/housekeeping/korisnik.php");//kuca
-        await http.get("http://25.110.41.176/housekeeping/korisnik.php");//srecko
+        // await http.get("http://25.107.64.34/housekeeping/korisnik.php");//kuca
+        await http
+            .get(Uri.parse("http://25.110.41.176/housekeeping/korisnik.php")); //srecko
 
-    if(response.statusCode==404){
+    if (response.statusCode == 404) {
       _showToast(404);
       return;
     }
     List<dynamic> userList = jsonDecode(response.body);
 
-    bool userExists=false;
+    bool userExists = false;
 
     for (int i = 0; i < userList.length; i++) {
       if (usernameController.text == userList[i]['user_name'].toString() &&
           passwordController.text == userList[i]['user_pass'].toString()) {
-        userExists=true;
+        userExists = true;
         break;
       }
     }
 
-    if(userExists){
+    if (userExists) {
       Navigator.of(context).push(MaterialPageRoute<void>(
         builder: (context) => RoomList(),
       ));
-    }else{
+    } else {
       _showToast(0);
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset:false,
-        appBar: AppBar(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
         title: Text('HouseKeeping'),
       ),
       body: Container(
         alignment: Alignment.topCenter,
-        color:Colors.white,
+        color: Colors.white,
         child: Column(
           //crossAxisAlignment: CrossAxisAlignment.center,
           //mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height:50),
+            SizedBox(height: 50),
             Container(
               width: 350,
               height: 400,
               decoration: BoxDecoration(
                 color: Color.fromRGBO(240, 240, 240, 1.0),
                 border: Border(
-                  top: BorderSide(width: 2.0, color: Color.fromRGBO(217, 217, 217, 1.0),),
-                  left: BorderSide(width: 2.0, color: Color.fromRGBO(217, 217, 217, 1.0)),
-                  right: BorderSide(width: 2.0, color: Color.fromRGBO(217, 217, 217, 1.0)),
-                  bottom: BorderSide(width: 2.0, color: Color.fromRGBO(217, 217, 217, 1.0)),
+                  top: BorderSide(
+                    width: 2.0,
+                    color: Color.fromRGBO(217, 217, 217, 1.0),
+                  ),
+                  left: BorderSide(
+                      width: 2.0, color: Color.fromRGBO(217, 217, 217, 1.0)),
+                  right: BorderSide(
+                      width: 2.0, color: Color.fromRGBO(217, 217, 217, 1.0)),
+                  bottom: BorderSide(
+                      width: 2.0, color: Color.fromRGBO(217, 217, 217, 1.0)),
                 ),
               ),
               child: Column(
@@ -111,11 +124,13 @@ class _NewLoginPageState extends State<NewLoginPage> {
                     child: TextField(
                       controller: usernameController,
                       obscureText: false,
-                      style: TextStyle(fontFamily: 'Montserrat', fontSize: 20.0),
+                      style:
+                          TextStyle(fontFamily: 'Montserrat', fontSize: 20.0),
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.white,
-                        contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                        contentPadding:
+                            EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                         hintText: "Username",
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -136,11 +151,13 @@ class _NewLoginPageState extends State<NewLoginPage> {
                     child: TextField(
                       controller: passwordController,
                       obscureText: true,
-                      style: TextStyle(fontFamily: 'Montserrat', fontSize: 20.0),
+                      style:
+                          TextStyle(fontFamily: 'Montserrat', fontSize: 20.0),
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Colors.white,
-                        contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+                        contentPadding:
+                            EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
                         hintText: "Password",
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -158,7 +175,13 @@ class _NewLoginPageState extends State<NewLoginPage> {
                   ),
                   ElevatedButton(
                     child: Text('Log in!'),
-                    onPressed: _submit,
+                    //onPressed: _submit,
+                    onPressed: () {
+                      context.read<AuthenticationService>().signIn(
+                            email: usernameController.text,
+                            password: passwordController.text,
+                          );
+                    },
                   ),
                 ],
               ),
