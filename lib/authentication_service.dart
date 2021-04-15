@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class AuthenticationService{
 
   final FirebaseAuth _firebaseAuth;
+  final FirebaseMessaging _fcm = FirebaseMessaging.instance;
 
   AuthenticationService(this._firebaseAuth);
 
@@ -11,6 +13,8 @@ class AuthenticationService{
   Future<String> signIn({String email, String password}) async{
     try{
       await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      //String token=;
+      print('token=${await _fcm.getToken()}');
       return 'Signed in';
     }on FirebaseAuthException catch(e){
       return e.message;
@@ -24,6 +28,10 @@ class AuthenticationService{
     }on FirebaseAuthException catch(e){
       return e.message;
     }
+  }
+
+  Future<void> signOut() async{
+    await _firebaseAuth.signOut();
   }
 
 }
