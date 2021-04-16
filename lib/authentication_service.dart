@@ -15,9 +15,11 @@ class AuthenticationService{
       await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
       //String token=;
       print('token=${await _fcm.getToken()}');
-      return 'Signed in';
+      return 'Success';
     }on FirebaseAuthException catch(e){
-      return e.message;
+      print(e.code);
+      print(e.message);
+      return e.code;
     }
   }
 

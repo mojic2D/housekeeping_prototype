@@ -22,6 +22,63 @@ class _NewLoginPageState extends State<NewLoginPage> {
     super.dispose();
   }
 
+  String getMessageFromErrorCode(String errorCode) {
+    switch (errorCode) {
+      case "ERROR_EMAIL_ALREADY_IN_USE":
+      case "account-exists-with-different-credential":
+      case "email-already-in-use":
+        //return "Email already used. Go to login page.";
+        return 'Email je iskorisen. Idi na login stranicu.';
+        break;
+      case "ERROR_WRONG_PASSWORD":
+      case "wrong-password":
+        //return "Wrong email/password combination.";
+        return 'Pogresna kombinacija email/password';
+        break;
+      case "ERROR_USER_NOT_FOUND":
+      case "user-not-found":
+        //return "No user found with this email.";
+        return 'Ne postoji korisnik pod unesenim emailom.';
+        break;
+      case "ERROR_USER_DISABLED":
+      case "user-disabled":
+        //return "User disabled.";
+        return 'Korisnik je ugasen.';
+        break;
+      case "ERROR_TOO_MANY_REQUESTS":
+      case "operation-not-allowed":
+        //return "Too many requests to log into this account.";
+        return 'Previse pokusaja za login.';
+        break;
+      case "ERROR_OPERATION_NOT_ALLOWED":
+      case "operation-not-allowed":
+        //return "Server error, please try again later.";
+        return 'Greska na serveru, pokusajte opet kasnije.';
+        break;
+      case "ERROR_INVALID_EMAIL":
+      case "invalid-email":
+        //return "Email address is invalid.";
+        return 'Pogresna email adresa.';
+        break;
+      default:
+        //return "Login failed. Please try again.";
+        return 'Neuspjeli login. Pokusajte ponovo.';
+        break;
+    }
+  }
+
+  void _showToastError(String errorCode) {
+    String errorMessage = getMessageFromErrorCode(errorCode);
+
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(
+        getMessageFromErrorCode(errorCode),
+        textAlign: TextAlign.center,
+      ),
+      duration: const Duration(seconds: 5),
+    ));
+  }
+
   void _showToast(int statusCode) {
     if (statusCode == 404) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -46,8 +103,8 @@ class _NewLoginPageState extends State<NewLoginPage> {
   _submit() async {
     Response response =
         // await http.get("http://25.107.64.34/housekeeping/korisnik.php");//kuca
-        await http
-            .get(Uri.parse("http://25.110.41.176/housekeeping/korisnik.php")); //srecko
+        await http.get(Uri.parse(
+            "http://25.110.41.176/housekeeping/korisnik.php")); //srecko
 
     if (response.statusCode == 404) {
       _showToast(404);
@@ -176,11 +233,15 @@ class _NewLoginPageState extends State<NewLoginPage> {
                   ElevatedButton(
                     child: Text('Log in!'),
                     //onPressed: _submit,
-                    onPressed: () {
-                      context.read<AuthenticationService>().signIn(
-                            email: usernameController.text,
-                            password: passwordController.text,
-                          );
+                    onPressed: () async {
+                      String result =
+                          await context.read<AuthenticationService>().signIn(
+                                email: usernameController.text.trim(),
+                                password: passwordController.text.trim(),
+                              );
+                      if (result != 'Success') {
+                        _showToastError(result);
+                      }
                     },
                   ),
                 ],
