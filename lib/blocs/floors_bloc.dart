@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/widgets.dart';
-import 'package:housekeeping_prototype/models/app_model.dart';
 import 'package:housekeeping_prototype/models/floors_model.dart';
 import 'package:housekeeping_prototype/pojo/floor.dart';
 import 'package:housekeeping_prototype/pojo/room.dart';
-import 'package:http/http.dart' as http;
+import 'package:housekeeping_prototype/services/app_data.dart';
 import 'package:http/http.dart';
 
 class FloorsBloc {
@@ -26,7 +25,8 @@ class FloorsBloc {
     print('refreshed');
     List<Floor> floorNumList = <Floor>[];
 
-    Response response = await _readRegRoom();
+    Response response = await AppData.retrieveRoomData();
+    //print(response.body);
     List<dynamic> roomList = jsonDecode(response.body);
     //List<dynamic> roomList = jsonDecode(json);
     for (var i = 0; i < roomList.length; i++) {
@@ -36,7 +36,6 @@ class FloorsBloc {
 
       // print('floorNumber:'+floorNumber);
       // print('roomNumber:'+roomNumber);
-
 
       bool contains = false;
       Floor tempFloor;
@@ -57,7 +56,6 @@ class FloorsBloc {
     }
     model.floorList = floorNumList;
 
-    //
     if(model.selectedFloor==null){
       model.selectedFloor=model.floorList[0];
     }
@@ -70,11 +68,11 @@ class FloorsBloc {
     _modelController.add(model);
   }
 
-  Future<Response> _readRegRoom() async {
-    var url = 'http://25.110.41.176/housekeeping/soba.php';//srecko
-    //var url = 'http://25.107.64.34/housekeeping/soba.php';//kuca
-    return await http.get(Uri.parse(url));
-  }
+  // Future<Response> _readRegRoom() async {
+  //   var url = 'http://25.110.41.176/housekeeping/soba.php';//srecko
+  //   //var url = 'http://25.107.64.34/housekeeping/soba.php';//kuca
+  //   return await http.get(Uri.parse(url));
+  // }
 
   String json='[{"floor":"1","room":"101","isClean":"N"},{"floor":"1","room":"102","isClean":"D"},{"floor":"2","room":"201","isClean":"D"},{"floor":"2","room":"202","isClean":"D"},{"floor":"3","room":"301","isClean":"D"},{"floor":"3","room":"302","isClean":"D"},{"floor":"4","room":"401","isClean":"D"},{"floor":"4","room":"402","isClean":"D"}]';
 

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:housekeeping_prototype/authentication_service.dart';
+import 'package:housekeeping_prototype/services/authentication_service.dart';
 import 'package:housekeeping_prototype/ui/room_list.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;

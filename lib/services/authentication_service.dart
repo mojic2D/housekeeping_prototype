@@ -4,7 +4,14 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 class AuthenticationService{
 
   final FirebaseAuth _firebaseAuth;
-  final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+ // final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+
+  // Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message){
+  //   // If you're going to use other Firebase services in the background, such as Firestore,
+  //   // make sure you call `initializeApp` before using other Firebase services.
+  //   //await Firebase.initializeApp();
+  //   print("Handling a background message: ${message.messageId}");
+  // }
 
   AuthenticationService(this._firebaseAuth);
 
@@ -14,7 +21,7 @@ class AuthenticationService{
     try{
       await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
       //String token=;
-      print('token=${await _fcm.getToken()}');
+      //print('token=${await _fcm.getToken()}');
       return 'Success';
     }on FirebaseAuthException catch(e){
       print(e.code);

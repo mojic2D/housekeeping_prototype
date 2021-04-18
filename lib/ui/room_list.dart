@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:housekeeping_prototype/authentication_service.dart';
+
 import 'package:housekeeping_prototype/blocs/floors_bloc.dart';
 import 'package:housekeeping_prototype/models/floors_model.dart';
 import 'package:housekeeping_prototype/pojo/floor.dart';
 import 'package:housekeeping_prototype/pojo/room.dart';
+import 'package:housekeeping_prototype/services/authentication_service.dart';
 import 'package:housekeeping_prototype/ui/floor_list_tile.dart';
 import 'package:housekeeping_prototype/ui/notification_list.dart';
 import 'package:housekeeping_prototype/ui/room_list_tile.dart';
@@ -28,8 +29,8 @@ class _StateRoomList extends State<RoomList> {
   void initState() {
     firstTime = true;
     //widget.floorsBloc.model.selectedFloor=
-    // timer = Timer.periodic(
-    //     Duration(seconds: 2), (Timer t) => widget.floorsBloc.refreshData());
+    timer = Timer.periodic(
+        Duration(seconds: 15), (Timer t) => widget.floorsBloc.refreshData());
     super.initState();
   }
 

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:housekeeping_prototype/models/floors_model.dart';
 import 'package:housekeeping_prototype/pojo/room.dart';
+import 'package:housekeeping_prototype/services/app_data.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 
@@ -19,13 +20,13 @@ class RoomListTile extends StatefulWidget {
 class _RoomListTileState extends State<RoomListTile> {
   //bool isClean = false;
 
-  Future<Response> _updateRoomStatus(int roomNumber, String isClean) async {
-    var url =
-        'http://25.110.41.176/housekeeping/soba_statusApp.php?json={"soba":$roomNumber,"status":"$isClean"}';//srecko
-    //'http://25.107.64.34/housekeeping/soba_status.php?json={"soba":$roomNumber,"status":"$isClean"}';//kuca
-
-    return await http.post(Uri.parse(url));
-  }
+  // Future<Response> _updateRoomStatus(int roomNumber, String isClean) async {
+  //   var url =
+  //       'http://25.110.41.176/housekeeping/soba_statusApp.php?json={"soba":$roomNumber,"status":"$isClean"}';//srecko
+  //   //'http://25.107.64.34/housekeeping/soba_status.php?json={"soba":$roomNumber,"status":"$isClean"}';//kuca
+  //
+  //   return await http.post(Uri.parse(url));
+  // }
 
   showAlertDialog(BuildContext context, int roomIndex) {
     // set up the AlertDialog
@@ -59,7 +60,7 @@ class _RoomListTileState extends State<RoomListTile> {
 
   _updateRoomStatusUI(String status) async {
     print('_updateRoomStatusUI starts!');
-    Response response = await _updateRoomStatus(widget.roomIndex, status);
+    Response response = await AppData.updateRoomStatus(widget.roomIndex, status);
     print('response.header=${response.headers}');
     print('response.body=${response.body}');
     Map<String, dynamic> httpResponse = jsonDecode(response.body);
