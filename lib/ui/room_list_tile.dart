@@ -6,6 +6,7 @@ import 'package:housekeeping_prototype/pojo/room.dart';
 import 'package:housekeeping_prototype/services/app_data.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
+import 'package:progress_indicators/progress_indicators.dart';
 
 class RoomListTile extends StatefulWidget {
   RoomListTile({@required this.roomIndex, @required this.model});
@@ -60,7 +61,8 @@ class _RoomListTileState extends State<RoomListTile> {
 
   _updateRoomStatusUI(String status) async {
     print('_updateRoomStatusUI starts!');
-    Response response = await AppData.updateRoomStatus(widget.roomIndex, status);
+    Response response =
+        await AppData.updateRoomStatus(widget.roomIndex, status);
     print('response.header=${response.headers}');
     print('response.body=${response.body}');
     Map<String, dynamic> httpResponse = jsonDecode(response.body);
@@ -88,6 +90,8 @@ class _RoomListTileState extends State<RoomListTile> {
       }
     }
   }
+
+  bool notNull(Object o) => o != null;
 
   @override
   Widget build(BuildContext context) {
@@ -134,20 +138,39 @@ class _RoomListTileState extends State<RoomListTile> {
               ),
             ),
           ),
-          Container(
-              child: Text(
-            'Soba ${widget.roomIndex}',
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 16.0,
-            ),
-          )),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                  child: Text(
+                'Soba ${widget.roomIndex}',
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.0,
+                ),
+              )),
+              Row(
+                children: [
+                  Text(
+                    room.isClean ? 'Soba je cista!' : 'Spremna za ciscenje!',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                  !room.isClean
+                      ? JumpingDotsProgressIndicator(
+                          fontSize: 14.0,
+                        )
+                      : null,
+                ].where(notNull).toList(),
+              ),
+            ],
+          ),
           Padding(
             padding: EdgeInsets.only(right: 20.0),
             child: Container(
               height: 45,
               child: ElevatedButton(
-
                 onPressed: room.isClean
                     ? null
                     : () => showAlertDialog(context, widget.roomIndex),
@@ -162,10 +185,10 @@ class _RoomListTileState extends State<RoomListTile> {
                 style: ButtonStyle(
                   //enableFeedback: false,
                   //animationDuration: Duration.zero,
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(room.isClean ? Colors.grey[300]:Colors.blue),
-                  foregroundColor:
-                      MaterialStateProperty.all<Color>(room.isClean ? Colors.grey: Colors.white),
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      room.isClean ? Colors.grey[300] : Colors.blue),
+                  foregroundColor: MaterialStateProperty.all<Color>(
+                      room.isClean ? Colors.grey : Colors.white),
                 ),
               ),
             ),

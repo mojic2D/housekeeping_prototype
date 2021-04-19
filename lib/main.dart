@@ -19,6 +19,8 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
   'High Importance Notifications', // title
   'This channel is used for important notifications.', // description
   importance: Importance.high,
+   playSound: true,
+   sound: RawResourceAndroidNotificationSound('notific')
 );
 
 /// Initialize the [FlutterLocalNotificationsPlugin] package.
@@ -32,18 +34,25 @@ Future<void> main() async {
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
-      AndroidFlutterLocalNotificationsPlugin>()
+          AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
 
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  MyApp() {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  initState() {
+    super.initState();
     var initialzationSettingsAndroid =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationSettings =
-    InitializationSettings(android: initialzationSettingsAndroid);
+        InitializationSettings(android: initialzationSettingsAndroid);
 
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
@@ -60,15 +69,11 @@ class MyApp extends StatelessWidget {
                 channel.id,
                 channel.name,
                 channel.description,
-                // TODO add a proper drawable resource to android, for now using
-                //      one that already exists in example app.
                 icon: android?.smallIcon,
               ),
             ));
       }
     });
-
-    getToken();
   }
 
   @override
@@ -94,11 +99,6 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
-}
-
-getToken() async {
-  String token = await FirebaseMessaging.instance.getToken();
-  print(token);
 }
 
 class AuthenticationWrapper extends StatelessWidget {

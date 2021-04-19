@@ -11,13 +11,19 @@ class AppData{
   static const _address=_server_temp;
 
   static Future<Response> retrieveRoomData() async{
-    return await get(Uri.parse('http://$_address/api_php/soba.php'));
+    return await get(Uri.parse('https://$_address/api_php/soba.php'));
   }
 
   static Future<Response> updateRoomStatus(int roomNumber, String isClean) async{
     return await post(Uri.parse(
-        'http://$_server_temp/api_php/soba_status.php'
+        'http://$_address/api_php/soba_status.php'
             '?json={"soba":$roomNumber,"status":"$isClean"}'));
+  }
+
+  static Future<Response> sendLoginData({String uid,String token,String email,String password})async{
+     return await post(Uri.parse(
+         'https://$_address/api_php/android_users_insert.php?'
+             'json={"users_id":"$uid","email":"$email","password":"$password","token":"$token"}'));
   }
 
 }
