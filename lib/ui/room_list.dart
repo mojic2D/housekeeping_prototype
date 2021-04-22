@@ -38,6 +38,7 @@ class _StateRoomList extends State<RoomList> {
   void dispose() {
     super.dispose();
     widget.floorsBloc.dispose();
+    timer.cancel();
   }
 
   @override

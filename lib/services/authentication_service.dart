@@ -13,7 +13,6 @@ class AuthenticationService {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
-      //String token=;
       final token = await FirebaseMessaging.instance.getToken();
       print('token=$token');
       final uid = _firebaseAuth.currentUser.uid;
