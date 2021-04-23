@@ -29,6 +29,7 @@ class _StateRoomList extends State<RoomList> {
   void initState() {
     firstTime = true;
     //widget.floorsBloc.model.selectedFloor=
+    widget.floorsBloc.refreshData();
     timer = Timer.periodic(
         Duration(seconds: 15), (Timer t) => widget.floorsBloc.refreshData());
     super.initState();
