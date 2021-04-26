@@ -34,6 +34,7 @@ class FloorsBloc {
       String roomNumber = roomList[i]['sifra'].toString();
       bool isClean = roomList[i]['status'].toString() == 'D' ? true : false;
 
+      print('roomNumber= $roomNumber ; isCLean=$isClean');
       // print('floorNumber:'+floorNumber);
       // print('roomNumber:'+roomNumber);
 
@@ -58,7 +59,14 @@ class FloorsBloc {
 
     if(model.selectedFloor==null){
       model.selectedFloor=model.floorList[0];
+    }else{
+      for(Floor f in floorNumList){
+        if(f.number==model.selectedFloor.number){
+          model.selectedFloor=f;
+        }
+      }
     }
+
 
     _modelController.add(model);
   }
