@@ -34,7 +34,7 @@ class FloorsBloc {
       String roomNumber = roomList[i]['sifra'].toString();
       bool isClean = roomList[i]['status'].toString() == 'D' ? true : false;
 
-      print('roomNumber= $roomNumber ; isCLean=$isClean');
+      //print('roomNumber= $roomNumber ; isCLean=$isClean');
       // print('floorNumber:'+floorNumber);
       // print('roomNumber:'+roomNumber);
 

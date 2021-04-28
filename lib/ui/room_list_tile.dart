@@ -1,17 +1,19 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:housekeeping_prototype/blocs/floors_bloc.dart';
 import 'package:housekeeping_prototype/models/floors_model.dart';
 import 'package:housekeeping_prototype/pojo/room.dart';
 import 'package:housekeeping_prototype/services/app_data.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:progress_indicators/progress_indicators.dart';
+import 'package:provider/provider.dart';
 
 class RoomListTile extends StatefulWidget {
-  RoomListTile({@required this.roomIndex, @required this.model});
+  RoomListTile({@required this.roomIndex, @required this.floorsBloc});
 
-  final FloorsModel model;
+  final FloorsBloc floorsBloc;
   final int roomIndex;
 
   @override
@@ -19,16 +21,6 @@ class RoomListTile extends StatefulWidget {
 }
 
 class _RoomListTileState extends State<RoomListTile> {
-  //bool isClean = false;
-
-  // Future<Response> _updateRoomStatus(int roomNumber, String isClean) async {
-  //   var url =
-  //       'http://25.110.41.176/housekeeping/soba_statusApp.php?json={"soba":$roomNumber,"status":"$isClean"}';//srecko
-  //   //'http://25.107.64.34/housekeeping/soba_status.php?json={"soba":$roomNumber,"status":"$isClean"}';//kuca
-  //
-  //   return await http.post(Uri.parse(url));
-  // }
-
   showAlertDialog(BuildContext context, int roomIndex) {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
@@ -60,15 +52,29 @@ class _RoomListTileState extends State<RoomListTile> {
   }
 
   _updateRoomStatusUI(String status) async {
-    print('_updateRoomStatusUI starts!');
-    Response response =
-        await AppData.updateRoomStatus(widget.roomIndex, status);
-    print('response.header=${response.headers}');
-    print('response.body=${response.body}');
+    bool timeout = false;
+    Response response = await AppData.updateRoomStatus(
+      widget.roomIndex,
+      status,
+      () {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text(
+            'Nema odgovora od servera',
+            textAlign: TextAlign.center,
+          ),
+          duration: const Duration(seconds: 5),
+        ));
+        timeout = true;
+      },
+    );
+
+    if (timeout) return;
+
     Map<String, dynamic> httpResponse = jsonDecode(response.body);
+    print('httpResponse=${httpResponse['status']}');
     if (httpResponse['status'] == "200") {
       setState(() {
-        widget.model.selectedFloor
+        widget.floorsBloc.model.selectedFloor
             .roomByNumber(widget.roomIndex.toString())
             .isClean = status == "D" ? true : false;
       });
@@ -88,6 +94,14 @@ class _RoomListTileState extends State<RoomListTile> {
           ),
         ));
       }
+    } else if (httpResponse['status'] == "404") {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: const Text(
+          'Greška na serveru.',
+          textAlign: TextAlign.center,
+        ),
+        duration: const Duration(seconds: 4),
+      ));
     }
   }
 
@@ -95,8 +109,9 @@ class _RoomListTileState extends State<RoomListTile> {
 
   @override
   Widget build(BuildContext context) {
-    Room room =
-        widget.model.selectedFloor.roomByNumber(widget.roomIndex.toString());
+    Room room = Provider.of<FloorsModel>(context)
+        .selectedFloor
+        .roomByNumber(widget.roomIndex.toString());
     return Container(
       height: 85,
       decoration: BoxDecoration(
