@@ -65,7 +65,7 @@ class _RoomListTileState extends State<RoomListTile> {
     Map<String, dynamic> httpResponse = jsonDecode(response.body);
     if (httpResponse['status'] == "200") {
       setState(() {
-        Provider.of<FloorsBloc>(context).model.selectedFloor
+        Provider.of<FloorsBloc>(context,listen: false).model.selectedFloor
             .roomByNumber(widget.roomIndex.toString())
             .isClean = status == "D" ? true : false;
       });

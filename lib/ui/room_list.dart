@@ -49,16 +49,6 @@ class _StateRoomList extends State<RoomList> {
           title: Text('HouseKeeping'),
           actions: <Widget>[
             ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute<void>(
-                  builder: (context) => NotificationList(),
-                ));
-              },
-              child: Icon(widget.floorsBloc.showingNotifications.value
-                  ? Icons.menu
-                  : Icons.notifications),
-            ),
-            ElevatedButton(
               onPressed: () => widget.floorsBloc.refreshData(),
               child: Icon(Icons.refresh_sharp),
             ),
