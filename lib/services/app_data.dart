@@ -22,7 +22,7 @@ class AppData{
 
   static Future<Response> sendLoginData({String uid,String token,String email,String password})async{
      return await post(Uri.parse(
-         'https://$_address/api_php/android_users_insert.php?'
+         'https://$_address/api_php/users_android.php?'
              'json={"users_id":"$uid","email":"$email","password":"$password","token":"$token"}'));
   }
 

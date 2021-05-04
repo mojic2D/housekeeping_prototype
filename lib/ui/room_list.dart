@@ -73,124 +73,154 @@ class _StateRoomList extends State<RoomList> {
           //     selectedFloor: Floor(number: "1", roomList: <Room>[]),
           //     floorList: <Floor>[]),
           builder: (context, snapshot) {
-            final FloorsModel model =
+            FloorsModel model =
                 snapshot.data == null ? widget.floorsBloc.model : snapshot.data;
 
             if (snapshot.data == null) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      child: CircularProgressIndicator(),
-                      width: 60,
-                      height: 60,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 16),
-                      child: Text('Awaiting result...'),
-                    )
-                  ],
-                ),
-              );
+              return _buildCircularProgress();
             }
 
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Container(
-                    height: 40,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: model.floorList.length,
-                      itemBuilder: (context, index) {
-                        bool hasFloorsForCleaning = model.hasRoomsForCleaning(
-                            model.floorList[index].toString());
-                        return Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Container(
-                            //decoration: BoxDecoration(borderRadius: BorderRadius.circular(12.0), border: Border.all(color: Colors.grey,width: 3.5,style: BorderStyle.solid, ),),
-                            width: 100,
-                            //color: Colors.blueGrey,
-                            child: ElevatedButton(
-                              style: ButtonStyle(
-                                shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                  side: BorderSide(
-                                      color: Colors.blue, width: 2.2),
-                                )),
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        int.parse(model.selectedFloor.number) -
-                                                    1 ==
-                                                index
-                                            ? Colors.blue
-                                            : Colors.white),
-                                foregroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        int.parse(model.selectedFloor.number) -
-                                                    1 ==
-                                                index
-                                            ? Colors.white
-                                            : Colors.blue),
-                              ),
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    SizedBox(
-                                      width: hasFloorsForCleaning ? 16 : 0,
-                                    ),
-                                    Text(model.floorList[index].toString()),
-                                    Icon(
-                                      Icons.arrow_drop_down_circle,
-                                      color: Colors.red,
-                                      size: hasFloorsForCleaning ? 16 : 0,
-                                    ),
-                                  ]),
-                              onPressed: () =>
-                                  widget.floorsBloc.changeFloor(index),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                Container(
-                  child: Expanded(
-                    flex: 1,
+            //print('Starting streambuilder count!');
+            // for(Room r in model.floorList[0].roomList){
+            //   print('Room number: ${r.number} ; isClean: ${r.isClean}');
+            // }
+
+            Room room =
+            model.selectedFloor.roomByNumber(105.toString());
+            //rint('soba 5 je=${room.isClean}');
+            return Provider<FloorsBloc>(
+
+              create: (_)=>widget.floorsBloc,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          top: BorderSide(width: 2.0, color: Colors.black54),
-                          // left: BorderSide(width: 4.0, color: Colors.grey),
-                          // right: BorderSide(width: 4.0, color: Colors.grey),
-                          // bottom: BorderSide(width: 1.0, color: Colors.black54),
-                        ),
-                      ),
+                      height: 40,
                       child: ListView.builder(
-                        itemCount: model.selectedFloor.roomList.length,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: model.floorList.length,
                         itemBuilder: (context, index) {
-                          return RoomListTile(
-                            model: model,
-                            roomIndex: int.parse(
-                                model.selectedFloor.roomList[index].number),
+                          bool hasFloorsForCleaning = model.hasRoomsForCleaning(
+                              model.floorList[index].toString());
+
+                          return Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Container(
+                              //decoration: BoxDecoration(borderRadius: BorderRadius.circular(12.0), border: Border.all(color: Colors.grey,width: 3.5,style: BorderStyle.solid, ),),
+                              width: 100,
+                              //color: Colors.blueGrey,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                  shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                    side: BorderSide(
+                                        color: Colors.blue, width: 2.2),
+                                  )),
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          int.parse(model.selectedFloor.number) -
+                                                      1 ==
+                                                  index
+                                              ? Colors.blue
+                                              : Colors.white),
+                                  foregroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          int.parse(model.selectedFloor.number) -
+                                                      1 ==
+                                                  index
+                                              ? Colors.white
+                                              : Colors.blue),
+                                ),
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(
+                                        width: hasFloorsForCleaning ? 16 : 0,
+                                      ),
+                                      Text(model.floorList[index].toString()),
+                                      Icon(
+                                        Icons.arrow_drop_down_circle,
+                                        color: Colors.red,
+                                        size: hasFloorsForCleaning ? 16 : 0,
+                                      ),
+                                    ]),
+                                onPressed: () =>
+                                    widget.floorsBloc.changeFloor(index),
+                              ),
+                            ),
                           );
                         },
                       ),
                     ),
                   ),
-                ),
-              ],
+                  Container(
+                    child: Expanded(
+                      flex: 1,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            top: BorderSide(width: 2.0, color: Colors.black54),
+                            // left: BorderSide(width: 4.0, color: Colors.grey),
+                            // right: BorderSide(width: 4.0, color: Colors.grey),
+                            // bottom: BorderSide(width: 1.0, color: Colors.black54),
+                          ),
+                        ),
+                        child: Consumer<FloorsBloc>(
+                          builder: (context, floorsBloc, child){
+                            return ListView.builder(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            itemCount: model.selectedFloor.roomList.length,
+                            itemBuilder: (context, index) {
+                              //FloorsModel model1=Provider.of<FloorsBloc>(context).model;
+                              Room room =
+                              model.selectedFloor.roomByNumber(int.parse(
+                                  model.selectedFloor.roomList[index].number).toString());
+                              //print('Starting listview of RoomListTile!${room.number} ; ${room.isClean}');
+
+                              return RoomListTile(
+                                //model: model,
+                                roomIndex: int.parse(
+                                    model.selectedFloor.roomList[index].number),
+                                //roomIndex: index,
+                              );
+                            },
+                          );}
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             );
           },
         ));
     ;
+  }
+
+
+
+  Center _buildCircularProgress() {
+    return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    child: CircularProgressIndicator(),
+                    width: 60,
+                    height: 60,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 16),
+                    child: Text('Awaiting result...'),
+                  )
+                ],
+              ),
+            );
   }
 }
