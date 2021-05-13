@@ -3,7 +3,7 @@
    <application
          android:name=".Application"
         android:label="housekeeping_prototype"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/door_hanger"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
