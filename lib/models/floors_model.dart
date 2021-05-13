@@ -14,7 +14,7 @@ class FloorsModel{
 
   int indexOfSelectedFloor(){
     for(Floor f in floorList){
-          if(f.number==selectedFloor){
+          if(f.number==selectedFloor.number){
             return floorList.indexOf(f);
           }
     }

@@ -7,7 +7,6 @@ import 'package:housekeeping_prototype/models/floors_model.dart';
 import 'package:housekeeping_prototype/pojo/floor.dart';
 import 'package:housekeeping_prototype/pojo/room.dart';
 import 'package:housekeeping_prototype/services/authentication_service.dart';
-import 'package:housekeeping_prototype/ui/floor_list_tile.dart';
 import 'package:housekeeping_prototype/ui/notification_list.dart';
 import 'package:housekeeping_prototype/ui/room_list_tile.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +27,6 @@ class _StateRoomList extends State<RoomList> {
 
   @override
   void initState() {
-    print('initstate');
     firstTime = true;
     // floorsBloc=new FloorsBloc();
     widget.floorsBloc.refreshData();
@@ -40,7 +38,6 @@ class _StateRoomList extends State<RoomList> {
   @override
   void dispose() {
     super.dispose();
-    print('dispose');
     widget.floorsBloc.dispose();
     timer.cancel();
   }
@@ -48,21 +45,10 @@ class _StateRoomList extends State<RoomList> {
   @override
   Widget build(BuildContext context) {
     FloorsBloc floorsBloc=widget.floorsBloc;
-    print('build');
     return Scaffold(
         appBar: AppBar(
           title: Text('HouseKeeping'),
           actions: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute<void>(
-                  builder: (context) => NotificationList(),
-                ));
-              },
-              child: Icon(floorsBloc.showingNotifications.value
-                  ? Icons.menu
-                  : Icons.notifications),
-            ),
             ElevatedButton(
               onPressed: () => floorsBloc.refreshData(),
               child: Icon(Icons.refresh_sharp),
@@ -164,8 +150,9 @@ class _StateRoomList extends State<RoomList> {
                                           size: hasFloorsForCleaning ? 16 : 0,
                                         ),
                                       ]),
-                                  onPressed: () =>
-                                      floorsBloc.changeFloor(index),
+                                  onPressed: () {
+                                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                                      floorsBloc.changeFloor(index);},
                                 ),
                               ),
                             );

@@ -18,7 +18,7 @@ class AppData {
 
   static Future<Response> updateRoomStatus(int roomNumber, String isClean,
       [Function func]) async {
-    return await post(Uri.parse('http://$_address/api_php/soba_status1.php'
+    return await post(Uri.parse('https://$_address/api_php/soba_status.php'
             '?json={"soba":$roomNumber,"status":"$isClean"}'))
         .timeout(
       _timeout_duration,
