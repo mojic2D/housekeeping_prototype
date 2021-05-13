@@ -1,4 +1,4 @@
-package com.example.housekeeping_prototype
+package com.mojic.housekeeping_prototype
 
 import io.flutter.app.FlutterApplication
 import io.flutter.plugin.common.PluginRegistry
