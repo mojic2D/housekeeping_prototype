@@ -68,6 +68,11 @@ class FloorsBloc {
     }
 
 
+    // print('Starting floorsBloc model count!');
+    // for(Room r in model.floorList[0].roomList){
+    //   print('Room number: ${r.number} ; isClean: ${r.isClean}');
+    // }
+
     _modelController.add(model);
   }
 
